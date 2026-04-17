@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #0f0f10;
+  --color-bg-secondary: #17181c;
+  --color-bg-card: #1e1f24;
+  --color-bg-elevated: #26272d;
+  --color-text-primary: #f2f2f2;
+  --color-text-secondary: #9da1a8;
+  --color-text-muted: #6b7280;
+  --color-accent-green: #00c896;
+  --color-accent-red: #ff5c5c;
+  --color-accent-blue: #4a9eff;
+  --color-accent-amber: #f5a623;
+  --color-accent-purple: #a78bfa;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-hover: rgba(255, 255, 255, 0.12);
+
+  --font-sans: "Inter", "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", monospace;
+}
+
+@layer base {
+  body {
+    background-color: #0f0f10;
+    color: #f2f2f2;
+    font-family: "Inter", "IBM Plex Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-image:
+      radial-gradient(circle at 30% 30%, rgba(90,90,90,0.15), transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(120,120,120,0.12), transparent 65%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background-color: rgba(74, 158, 255, 0.3);
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: rgba(30, 31, 36, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .font-mono-metric {
+    font-family: "JetBrains Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ReactFlow overrides for dark theme */
+.react-flow__background {
+  background-color: transparent !important;
+}
+.react-flow__controls {
+  background: #1e1f24 !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 8px !important;
+}
+.react-flow__controls-button {
+  background: #1e1f24 !important;
+  fill: #9da1a8 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+.react-flow__controls-button:hover {
+  fill: #f2f2f2 !important;
+  background: #26272d !important;
+}
+.react-flow__edge.animated path {
+  animation-duration: 3s !important;
+}
+
+/* Backtest Engine Animations */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(74, 158, 255, 0); }
+  50% { box-shadow: 0 0 25px rgba(74, 158, 255, 0.3); }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes typewriter-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

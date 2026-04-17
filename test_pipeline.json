@@ -1,0 +1,10 @@
+{
+    "prompt": "Create a medium risk swing trading strategy for PYPL using RSI momentum",
+    "start_date": "2015-01-01",
+    "initial_capital": 100000,
+    "position_size": 0.20,
+    "commission_pct": 0.001,
+    "slippage_pct": 0.0005,
+    "stop_loss_pct": 0.10,
+    "take_profit_pct": 0.25
+}
