@@ -14,10 +14,10 @@ export function Hero() {
       </p>
       
       <div className="flex items-center justify-center gap-4">
-        <button className="flex items-center gap-2 bg-[#11111A]/80 border border-white/10 text-[#FACC15] font-sans text-sm px-6 py-2.5 rounded-full hover:bg-white/5 transition-all">
+        <button onClick={() => window.location.href="/dashboard"} className="flex items-center gap-2 bg-[#11111A]/80 border border-white/10 text-[#FACC15] font-sans text-sm px-6 py-2.5 rounded-full hover:bg-white/5 transition-all">
           Get Started <ArrowUpRight size={16} />
         </button>
-        <button className="flex items-center gap-2 bg-[#11111A]/80 border border-white/10 text-white font-sans text-sm px-6 py-2.5 rounded-full hover:bg-white/5 transition-all">
+        <button onClick={() => window.location.href="/dashboard"} className="flex items-center gap-2 bg-[#11111A]/80 border border-white/10 text-white font-sans text-sm px-6 py-2.5 rounded-full hover:bg-white/5 transition-all">
           Go To Dashboard <ArrowUpRight size={16} />
         </button>
       </div>

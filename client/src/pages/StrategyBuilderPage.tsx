@@ -1,3 +1,4 @@
+import { useProfile } from "../hooks/useProfile";
 import { useCallback, useState, useRef, useEffect } from "react";
 import type { DragEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -360,6 +361,8 @@ function StrategyFlow() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { addPoints } = useProfile();
+
 
   // Strategy sources: location state, Zustand store
   const generatedStrategy = location.state?.generatedStrategy;
@@ -533,6 +536,8 @@ function StrategyFlow() {
       goal: q?.goal,
     };
     useStrategyStore.getState().setCurrentStrategy(backtestResult);
+    addPoints(30, 'Strategy Selected for Backtest! Good luck.');
+
     navigate("/backtest-run-1", {
       state: {
         strategy: backtestResult,

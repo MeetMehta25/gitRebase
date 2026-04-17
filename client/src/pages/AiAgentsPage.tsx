@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useProfile } from "../hooks/useProfile";
+
 import {
   Send,
   Sparkles,
@@ -796,6 +798,8 @@ const AgentSelectionCard = ({
 
 export function AiAgentsPage() {
   const navigate = useNavigate();
+  const { addPoints } = useProfile();
+
   const [viewMode, setViewMode] = useState<
     "intro" | "summoning" | "selection" | "debate"
   >("intro");
@@ -1115,6 +1119,8 @@ export function AiAgentsPage() {
 
       // Store in Zustand
       useStrategyStore.getState().setCurrentStrategy(strategyData);
+
+      addPoints(50, "Strategy Analysis Complete! Excellent start!");
 
       // Add completion animation
       await new Promise((resolve) => setTimeout(resolve, 1500));

@@ -1,6 +1,5 @@
 import { Sun, Moon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 
 export function ThemeToggle() {
   const [isLight, setIsLight] = useState(() => {
