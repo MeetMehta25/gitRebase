@@ -91,7 +91,6 @@
   animation-duration: 3s !important;
 }
 
-/* Backtest Engine Animations */
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 0 rgba(74, 158, 255, 0); }
   50% { box-shadow: 0 0 25px rgba(74, 158, 255, 0.3); }
@@ -106,3 +105,26 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* 
+
+/* Standard Universal Light Mode Toggle via HTML Filter inverting */
+html.light-theme {
+  filter: invert(1) hue-rotate(180deg);
+  background-color: #FAFAF5; /* Inverse of standard bg */
+  min-height: 100vh;
+}
+/* Re-invert media so they look normal */
+html.light-theme img,
+html.light-theme video,
+html.light-theme canvas,
+html.light-theme [data-no-invert] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Ensure specific charts aren't broken by inversion */
+html.light-theme .tradingview-widget-container iframe {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html.light-theme { overflow: hidden; height: 100vh; }

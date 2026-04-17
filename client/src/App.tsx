@@ -13,7 +13,7 @@ import { BentoGrid } from './components/BentoGrid';
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#05050A]">
+    <div className="h-screen overflow-y-auto overflow-x-hidden flex flex-col relative bg-[#05050A]">
       {/* Global background from Image 1 */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Base gradient matching the dark space look */}

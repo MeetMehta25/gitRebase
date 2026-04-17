@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from '../assets/logo.png';
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
   return (
@@ -35,9 +36,12 @@ export function Navbar() {
         </div>
 
         {/* CTA */}
-        <Link to="/login" className="text-sm font-mono font-semibold text-white hover:text-[#FACC15] transition-colors">
-          Login
-        </Link>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <Link to="/login" className="text-sm font-mono font-semibold text-white hover:text-[#FACC15] transition-colors">
+            Login
+          </Link>
+        </div>
 
       </nav>
     </div>

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import logo from "../../assets/logo.png";
+import { ThemeToggle } from "../ThemeToggle";
 
 const NAV_ITEMS = [
   // { name: "AI Agents", path: "/dashboard", icon: BrainCircuit },
@@ -153,6 +154,10 @@ export function AppLayout() {
                 <span className="ml-4 text-sm font-medium">Collapse</span>
               )}
             </button>
+
+            <div className="flex justify-center w-full mt-2">
+              <ThemeToggle />
+            </div>
           </div>
         </aside>
 
