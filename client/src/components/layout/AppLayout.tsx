@@ -164,7 +164,7 @@ export function AppLayout() {
           <div className="px-4 mb-8 w-full flex justify-center shrink-0">
             <Link
               to="/dashboard"
-              title={isCollapsed ? "New Agent" : undefined}
+              title={isCollapsed ? "New Strategy" : undefined}
               className={cn(
                 "flex items-center justify-center rounded-full border transition-colors",
                 isCollapsed ? "w-10 h-10" : "w-full h-10 px-4 gap-2",
@@ -175,7 +175,7 @@ export function AppLayout() {
             >
               <Plus className="w-5 h-5 shrink-0" />
               {!isCollapsed && (
-                <span className="text-sm font-medium">New Agent</span>
+                <span className="text-sm font-medium">New Strategy</span>
               )}
             </Link>
           </div>

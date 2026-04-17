@@ -14,6 +14,7 @@ import {
   Settings,
   MoreVertical,
   Sparkles,
+  FileText,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "../lib/utils";
@@ -108,6 +109,36 @@ export function StrategyResultsPage() {
     navigator.clipboard.writeText(text);
     setCopyFeedback(label);
     setTimeout(() => setCopyFeedback(null), 2000);
+  };
+
+  const handleDownloadPdf = async () => {
+    try {
+      // Show loading feedback (can just change button state if wanted, reusing setCopyFeedback for toast context)
+      setCopyFeedback("Generating PDF on server... (Sending to WhatsApp!)");
+      const res = await fetch("/api/strategy/export_pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(strategy),
+      });
+
+      if (!res.ok) throw new Error("Failed to generate PDF");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `backtest_report_${strategy.ticker || "strategy"}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      setCopyFeedback("✓ Report Downloaded & Sent to WhatsApp!");
+      setTimeout(() => setCopyFeedback(null), 3000);
+    } catch (err) {
+      console.error(err);
+      setCopyFeedback("Failed to generate report.");
+      setTimeout(() => setCopyFeedback(null), 3000);
+    }
   };
 
   const handleOpenInBuilder = () => {
@@ -748,11 +779,27 @@ export function StrategyResultsPage() {
                 },
               });
             }}
-            className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all border border-white/20"
+            className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all border border-white/20 shrink-0"
           >
             Backtest Again
           </button>
+          
+          <button
+            onClick={handleDownloadPdf}
+            className="flex items-center gap-2 px-6 py-3 bg-[#0F9D58] hover:bg-[#0c834a] text-white font-semibold rounded-xl transition-all shadow-lg shrink-0"
+            title="Download PDF & Send to WhatsApp"
+          >
+            <FileText className="w-5 h-5" />
+            Export & Send to WP
+          </button>
         </div>
+
+        {/* Global Toast for Export Feedback */}
+        {copyFeedback && copyFeedback !== "Strategy JSON" && (
+          <div className="fixed bottom-24 right-8 bg-[#0F9D58] text-white px-4 py-2 rounded-lg shadow-xl shadow-green-500/20 backdrop-blur-sm z-50 animate-in slide-in-from-bottom-2">
+            {copyFeedback}
+          </div>
+        )}
       </div>
     </div>
   );

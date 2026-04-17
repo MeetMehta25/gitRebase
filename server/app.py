@@ -8,7 +8,7 @@ import traceback
 import sys
 import io
 from unittest import result
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from config.settings import Config
 from config.database import init_db, get_db
@@ -1936,6 +1936,40 @@ def create_app(config_class=Config):
             return _resp({"valid": True}, status=200)
         except Exception as e:
             return _resp(error=str(e), status=500)
+
+    @app.route("/api/strategy/export_pdf", methods=["POST"])
+    def export_pdf():
+        """
+        POST /api/strategy/export_pdf
+        Generates a PDF from strategy/backtest payload and sends via WhatsApp (Green API).
+        """
+        try:
+            data = request.get_json(silent=True) or {}
+            
+            # Use pdf_generator service to build the PDF
+            from services.pdf_generator import generate_backtest_pdf
+            from services.alert_service import whatsapp_alert
+            import time
+            import os
+            
+            report_name = f"backtest_report_{int(time.time())}.pdf"
+            report_path = os.path.join("/tmp" if os.environ.get('ENV') != 'development' else ".", report_name)
+            
+            # Generate the PDF file locally
+            pdf_path = generate_backtest_pdf(data, report_path)
+            
+            # Send file to WhatsApp via Green API
+            caption = f"🚀 *Backtest Report Generated* \nTicker: {data.get('ticker', 'Unknown')}\n"
+            if data.get('overall_metrics'):
+                ret = data.get('overall_metrics').get('total_return_pct', 0) * 100
+                caption += f"Total Return: {ret:.2f}%\n"
+            
+            whatsapp_alert.send_file(pdf_path, caption=caption)
+            
+            return send_file(pdf_path, as_attachment=True, download_name=report_name, mimetype='application/pdf')
+        except Exception as e:
+            print(f"[EXPORT PDF ERROR] {e}")
+            return _resp(error=f"Error generating PDF: {str(e)}", status=500)
 
     # ── Full Pipeline: Strategy → Backtest ────────────────────────────────────
     @app.route("/api/pipeline_full", methods=["POST"])
