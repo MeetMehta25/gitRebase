@@ -32,7 +32,7 @@ export function LoginPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(42,27,61,0.4)_0%,rgba(11,10,20,1)_60%)]"></div>
         
         {/* Subtle Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] mask-[radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[60px_60px] mask-[radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]"></div>
         
         {/* Glowing stars/nodes scattered like in the image */}
         <div className="absolute top-[10%] left-[30%] w-1 h-1 bg-white rounded-full shadow-[0_0_15px_2px_rgba(255,255,255,0.8)]"></div>
@@ -52,7 +52,7 @@ export function LoginPage() {
           <div className="mb-12 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <img src={logo} alt="Alpha Quant Logo" className="w-12 h-12 object-contain" />
-              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 tracking-tight">Alpha Quant</h1>
+              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-blue-400 tracking-tight">Alpha Quant</h1>
             </div>
             <p className="text-white/50 text-sm">
               {isSignUp ? "Create your trading intelligence account" : "Welcome back to your trading hub"}
@@ -78,7 +78,7 @@ export function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="w-full px-5 py-4 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all duration-300 shadow-inner"
+                    className="w-full px-5 py-4 rounded-xl bg-white/4 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 focus:bg-white/6 transition-all duration-300 shadow-inner"
                     required
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -98,7 +98,7 @@ export function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full px-5 py-4 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all duration-300 shadow-inner"
+                    className="w-full px-5 py-4 rounded-xl bg-white/4 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 focus:bg-white/6 transition-all duration-300 shadow-inner"
                     required
                   />
                   <button
@@ -132,7 +132,7 @@ export function LoginPage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm your password"
-                      className="w-full px-5 py-4 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all duration-300 shadow-inner"
+                      className="w-full px-5 py-4 rounded-xl bg-white/4 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-purple-500/50 focus:bg-white/6 transition-all duration-300 shadow-inner"
                       required
                     />
                   </div>
@@ -143,7 +143,7 @@ export function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-4 px-6 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-75 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(147,51,234,0.3)] hover:shadow-[0_0_30px_rgba(147,51,234,0.5)]"
+                className="w-full mt-4 px-6 py-4 bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-75 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(147,51,234,0.3)] hover:shadow-[0_0_30px_rgba(147,51,234,0.5)]"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

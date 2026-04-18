@@ -21,10 +21,10 @@ export function QuantCoachPage() {
             <Bot className="h-5 w-5 text-purple-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-[#f2f2f2] tracking-tight">Quant Coach</h1>
+            <h1 className="text-xl font-bold text-text-primary tracking-tight">Quant Coach</h1>
             <div className="flex items-center gap-2 mt-0.5">
               <span className="flex h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse" />
-              <p className="text-xs text-[#9da1a8] font-medium uppercase tracking-widest leading-none">
+              <p className="text-xs text-text-secondary font-medium uppercase tracking-widest leading-none">
                 AI Trading Advisor • Online
               </p>
             </div>
@@ -33,7 +33,7 @@ export function QuantCoachPage() {
         <div className="flex items-center gap-2">
           <GlassCard className="py-1.5 px-3 flex items-center gap-2 border-white/5 bg-[#11111a]">
             <Shield className="h-3 w-3 text-purple-400" />
-            <span className="text-[10px] font-mono font-medium text-[#9da1a8]">SECURED CHANNEL</span>
+            <span className="text-[10px] font-mono font-medium text-text-secondary">SECURED CHANNEL</span>
           </GlassCard>
         </div>
       </div>
@@ -43,7 +43,7 @@ export function QuantCoachPage() {
         <div className="flex-1 flex flex-col gap-4">
           <GlassCard className="flex-1 p-0 overflow-hidden bg-[#0A0A0F]/60 border-white/5 relative shadow-2xl rounded-2xl">
             {/* Scanline effect */}
-            <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_2px,3px_100%]" />
+            <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-size-[100%_2px,3px_100%]" />
             
 {/* <iframe src="https://embed.liveavatar.com/v1/92c85e63-a6de-4a5d-af4f-dd0ac379e324" allow="microphone" title="LiveAvatar Embed" style="aspect-ratio: 16/9;"></iframe> */}
 
@@ -65,7 +65,7 @@ export function QuantCoachPage() {
               <div className="space-y-2.5">
                 <div className="flex justify-between items-center text-[11px]"><span className="text-[#a1a1aa] font-medium">Latency</span><span className="font-mono text-purple-300">24ms</span></div>
                 <div className="flex justify-between items-center text-[11px]"><span className="text-[#a1a1aa] font-medium">Data Streams</span><span className="font-mono text-[#f472b6]">12 Active</span></div>
-                <div className="flex justify-between items-center text-[11px]"><span className="text-[#a1a1aa] font-medium">Model Params</span><span className="font-mono text-[#f2f2f2]">405B Opt</span></div>
+                <div className="flex justify-between items-center text-[11px]"><span className="text-[#a1a1aa] font-medium">Model Params</span><span className="font-mono text-text-primary">405B Opt</span></div>
               </div>
             </GlassCard>
             <GlassCard className="bg-[#11111a]/90 border-white/5 p-4 flex flex-col gap-4 hover:border-purple-500/20 transition-colors rounded-2xl shadow-lg">
@@ -82,7 +82,7 @@ export function QuantCoachPage() {
         </div>
 
         {/* Right: Transcripts, Live Metrics, Chat Input */}
-        <div className="w-[380px] flex flex-col gap-5 shrink-0 px-1 pb-1">
+        <div className="w-95 flex flex-col gap-5 shrink-0 px-1 pb-1">
           {/* Layer 1: Live Metrics (Animated Card matched to screenshot) */}
           <motion.div
             initial={{ opacity: 0, x: 45 }}
@@ -93,7 +93,7 @@ export function QuantCoachPage() {
           >
             <div className="relative rounded-2xl overflow-hidden border border-white/5 bg-[#0A0A0F] p-5 shadow-2xl transition-all duration-500 hover:border-purple-500/30 z-10 w-full">
               <div className="flex items-center justify-between mb-6">
-                <span className="text-[12px] font-bold uppercase tracking-[0.15em] text-[#f2f2f2] flex items-center gap-2 relative z-10">
+                <span className="text-[12px] font-bold uppercase tracking-[0.15em] text-text-primary flex items-center gap-2 relative z-10">
                   <BarChart3 className="w-4 h-4 text-purple-500" /> Live Target Metrics
                 </span>
                 <span className="flex h-2 w-2 rounded-full bg-[#c084fc] shadow-[0_0_8px_rgba(192,132,252,0.8)]" />
@@ -113,11 +113,11 @@ export function QuantCoachPage() {
                  </div>
                  <div>
                    <p className="text-[11px] text-[#a1a1aa] mb-2 font-medium">Avg Hold</p>
-                   <p className="text-[15px] font-mono font-semibold text-[#f2f2f2]">4.2h</p>
+                   <p className="text-[15px] font-mono font-semibold text-text-primary">4.2h</p>
                  </div>
                  <div>
                    <p className="text-[11px] text-[#a1a1aa] mb-2 font-medium">Trades</p>
-                   <p className="text-[15px] font-mono font-semibold text-[#f2f2f2]">142</p>
+                   <p className="text-[15px] font-mono font-semibold text-text-primary">142</p>
                  </div>
               </div>
             </div>
@@ -138,11 +138,11 @@ export function QuantCoachPage() {
                   {msg.role === 'ai' ? (
                     <>
                       <Bot className="h-3 w-3 text-purple-400" />
-                      <span className="text-[9px] font-mono text-[#9da1a8]">{msg.time}</span>
+                      <span className="text-[9px] font-mono text-text-secondary">{msg.time}</span>
                     </>
                   ) : (
                     <>
-                      <span className="text-[9px] font-mono text-[#9da1a8]">{msg.time}</span>
+                      <span className="text-[9px] font-mono text-text-secondary">{msg.time}</span>
                       <User className="h-3 w-3 text-white/40" />
                     </>
                   )}

@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "strategy_builder": "Strategy Builder",
+    "ai_agents": "AI Agents"
+  },
+  "app": {
+    "title": "Strategy Builder"
+  }
+}

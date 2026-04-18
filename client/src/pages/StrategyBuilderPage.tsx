@@ -631,7 +631,7 @@ function StrategyFlow() {
             onClick={handleRunBacktest}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium shadow-[0_0_20px_rgba(147,51,234,0.3)]"
           >
-            <Play className="w-4 h-4" /> Run Backtest
+            <Play className="w-4 h-4" /> {t("run_backtest")}
           </button>
         </div>
       </div>
@@ -868,6 +868,7 @@ function StrategyFlow() {
 }
 
 export function StrategyBuilderPage() {
+  const { t } = useTranslation();
   return (
     <ReactFlowProvider>
       <StrategyFlow />

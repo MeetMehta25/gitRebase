@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   X,
   TrendingUp,
@@ -277,6 +278,7 @@ export function BacktestResults({
   onViewModified?: () => void;
 }) {
   void strategyId;
+  const { t } = useTranslation();
   // Extract metrics from real data if available
   const m = backtestData?.metrics;
   const sharpe = m?.risk_adjusted?.sharpe_ratio ?? m?.sharpe_ratio ?? 1.85;
@@ -373,7 +375,7 @@ export function BacktestResults({
             icon={<Activity className="w-3.5 h-3.5" />}
           />
           <GlowMetric
-            label="Total Trades"
+            label={t("total_trades")}
             value={String(totalTrades)}
             icon={<BarChart3 className="w-3.5 h-3.5" />}
           />

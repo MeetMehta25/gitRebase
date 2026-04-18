@@ -7,12 +7,12 @@ import { LoginPage } from './pages/LoginPage'
 import { AiAgentsPage } from './pages/AiAgentsPage'
 import { StrategyResultsPage } from './pages/StrategyResultsPage'
 import { StrategyBuilderPage } from './pages/StrategyBuilderPage'
-import { BacktestHistoryPage } from './pages/BacktestHistoryPage'
 import { NewsPage } from './pages/NewsPage'
 import { StockScreenerPage } from './pages/StockScreenerPage'
 import { PaperTradingPage } from './pages/PaperTradingPage'
 import {  BacktestRunPage2 } from './pages/BacktestRunPage2'
 import { QuantCoachPage } from './pages/QuantCoachPage'
+import "./lib/i18n";
 import App from './App'
 import { PlaygroundPage } from './pages/PlaygroundPage'
 import StrategyNotebookSandbox from './pages/StrategyNotebookSandbox'
@@ -29,7 +29,6 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/dashboard" element={<AiAgentsPage />} />
           <Route path="/strategy-results" element={<StrategyResultsPage />} />
           <Route path="/strategy-builder" element={<StrategyBuilderPage />} />
-          <Route path="/history" element={<BacktestHistoryPage />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/screener" element={<StockScreenerPage />} />
           <Route path="/trading" element={<PaperTradingPage />} />

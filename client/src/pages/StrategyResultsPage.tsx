@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -75,6 +76,7 @@ interface StrategyResponse {
 }
 
 export function StrategyResultsPage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const [deploying, setDeploying] = useState(false);
@@ -413,7 +415,7 @@ export function StrategyResultsPage() {
                       ?.total_trades !== undefined && (
                       <div className="bg-white/5 border border-white/6 rounded-2xl p-4">
                         <p className="text-white/40 text-xs mb-2 uppercase tracking-wider font-semibold">
-                          Total Trades
+                          {t("total_trades")}
                         </p>
                         <p className="text-white/80 font-semibold text-2xl">
                           {
