@@ -12,11 +12,13 @@ import { StockScreenerPage } from './pages/StockScreenerPage'
 import { PaperTradingPage } from './pages/PaperTradingPage'
 import {  BacktestRunPage2 } from './pages/BacktestRunPage2'
 import { QuantCoachPage } from './pages/QuantCoachPage'
-import "./lib/i18n";
+import "./i18n/config";
 import App from './App'
 import { PlaygroundPage } from './pages/PlaygroundPage'
 import StrategyNotebookSandbox from './pages/StrategyNotebookSandbox'
 import { BacktestRunPage1 } from './pages/BacktestRunPage1'
+import { ConnectBrokerPage } from './pages/ConnectBrokerPage'
+import { DocumentationPage } from './pages/DocumentationPage'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -37,6 +39,8 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/quant-coach" element={<QuantCoachPage />} />
           <Route path="/playground" element={<PlaygroundPage />} />
           <Route path="/sandbox" element={<StrategyNotebookSandbox />} />
+          <Route path="/connect-broker" element={<ConnectBrokerPage />} />
+          <Route path="/docs" element={<DocumentationPage />} />
           {/* <Route path="/mcp" element={<MCPPage />} /> */}
         </Route>
       </Routes>

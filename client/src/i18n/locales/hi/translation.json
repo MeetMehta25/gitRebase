@@ -2,7 +2,13 @@
   "nav": {
     "dashboard": "डैशबोर्ड",
     "strategy_builder": "रणनीति निर्माता",
-    "ai_agents": "एआई एजेंट"
+    "ai_agents": "एआई एजेंट",
+    "news": "समाचार",
+    "screener": "सक्रीनर",
+    "paper_trading": "पेपर ट्रेडिंग",
+    "quant_coach": "क्वांट कोच",
+    "playground": "प्लेग्राउंड",
+    "sandbox": "सैंडबॉक्स"
   },
   "app": {
     "title": "रणनीति निर्माता"

@@ -2,7 +2,13 @@
   "nav": {
     "dashboard": "Dashboard",
     "strategy_builder": "Strategy Builder",
-    "ai_agents": "AI Agents"
+    "ai_agents": "AI Agents",
+    "news": "News",
+    "screener": "Screener",
+    "paper_trading": "Paper Trading",
+    "quant_coach": "Quant Coach",
+    "playground": "Playground",
+    "sandbox": "Sandbox"
   },
   "app": {
     "title": "Strategy Builder"

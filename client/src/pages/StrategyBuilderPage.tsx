@@ -1,5 +1,6 @@
 import { useProfile } from "../hooks/useProfile";
 import { useCallback, useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import type { DragEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -358,6 +359,7 @@ function PropertyPanel({
 
 // ─── Main StrategyFlow Component ─────────────────────────────────────────────
 function StrategyFlow() {
+  const { t } = useTranslation();
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -868,7 +870,6 @@ function StrategyFlow() {
 }
 
 export function StrategyBuilderPage() {
-  const { t } = useTranslation();
   return (
     <ReactFlowProvider>
       <StrategyFlow />

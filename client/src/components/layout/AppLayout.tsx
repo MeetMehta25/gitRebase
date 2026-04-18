@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { LanguageToggle } from "./LanguageToggle";
 import { useProfile, type UserLevel } from "../../hooks/useProfile";
 import { Trophy, ThumbsUp } from "lucide-react";
 
@@ -77,26 +76,28 @@ import {
   IndentIncrease,
   Bot,
   CodeIcon,
+  CreditCard,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import logo from "../../assets/logo.png";
 import { ThemeToggle } from "../ThemeToggle";
 
-import { useTranslation } from "react-i18next";
 const NAV_ITEMS = [
   // { name: "AI Agents", path: "/dashboard", icon: BrainCircuit },
   { name: "Strategy Builder", path: "/strategy-builder", icon: Workflow },
   { name: "News", path: "/news", icon: Newspaper },
   { name: "Screener", path: "/screener", icon: LineChart },
   { name: "Paper Trading", path: "/trading", icon: Wallet },
+  { name: "Brokers", path: "/connect-broker", icon: CreditCard },
   { name: "Quant Coach", path: "/quant-coach", icon: Bot },
   { name: "Playground", path: "/playground", icon: Terminal },
   { name: "Sandbox", path: "/sandbox", icon: CodeIcon },
+  { name: "Documentation", path: "/docs", icon: BookOpen },
   //  {name : "MCP",path: "/mcp", icon: Brain}
 ];
 
 export function AppLayout() {
-  const { t } = useTranslation();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isCollapsed, setIsCollapsed] = useState(true);
   const location = useLocation();
@@ -255,7 +256,7 @@ export function AppLayout() {
                   />
                   {!isCollapsed && (
                     <span className="ml-4 text-sm font-medium">
-                      {t(`nav.${item.name.toLowerCase().replace(" ", "_")}`)}
+                      {item.name}
                     </span>
                   )}
                   {isActive && isCollapsed && (
@@ -293,7 +294,6 @@ export function AppLayout() {
 
             <div className="flex justify-center w-full mt-2">
               <ThemeToggle />
-              <LanguageToggle />
             </div>
 
             <div

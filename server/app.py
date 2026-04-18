@@ -837,6 +837,36 @@ def create_app(config_class=Config):
     QUOTE_CACHE = {}
     CACHE_DURATION = 300 # 5 minutes
 
+    @app.post("/api/brokers/connect")
+    def connect_broker():
+        body = request.get_json(silent=True) or {}
+        broker_name = body.get("brokerName")
+        broker_id = body.get("brokerId")
+        api_key = body.get("apiKey")
+        api_secret = body.get("apiSecret")
+        
+        if not broker_name or not broker_id or not api_key:
+            return _resp(error="Missing required fields", status=400)
+            
+        db = get_db()
+        brokers_coll = db["brokers"]
+        
+        doc = {
+            "broker_name": broker_name,
+            "broker_id": broker_id,
+            "api_key": api_key,
+            "api_secret": api_secret,
+            "status": "connected"
+        }
+        
+        brokers_coll.update_one(
+            {"broker_name": broker_name, "broker_id": broker_id},
+            {"$set": doc},
+            upsert=True
+        )
+        
+        return _resp(data={"status": "connected", "broker": broker_name})
+
     @app.post("/api/data/quotes")
     def fetch_quotes():
         """

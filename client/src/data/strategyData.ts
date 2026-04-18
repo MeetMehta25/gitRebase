@@ -25,6 +25,9 @@ export interface StrategyQuestion {
   goal: string;
   risk_level: string;
   short_name: string;
+  timeframe?: string;
+  entry_rules?: string[];
+  exit_rules?: string[];
 }
 
 export interface NodePropertyConfig {
