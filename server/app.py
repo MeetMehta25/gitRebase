@@ -46,6 +46,7 @@ log_capture = LogCapture()
 # Backtest engine import
 try:
     from backtest_engine.dsl_engine import run_dsl_backtest
+    from validation_engine.validation_pipeline import run_validation
     log_capture.add("✓ Backtest engine (DSL) loaded successfully")
 except ImportError as e:
     logger.error(f"✗ Failed to import backtest engine: {e}")
@@ -698,6 +699,14 @@ def create_app(config_class=Config):
     # MongoDB
     init_db(app)
 
+    # Live Paper Trading Engine Background Service
+    try:
+        from services.paper_trading import paper_trading_engine
+        paper_trading_engine.start()
+        logger.info("Paper Trading background engine started")
+    except Exception as e:
+        logger.error(f"Failed to start paper trading engine: {e}")
+
     # ── Root health check ──────────────────────────────────────────────────────
     @app.get("/health")
     def health():
@@ -1170,6 +1179,7 @@ def create_app(config_class=Config):
                 return _resp(error="Missing DSL configuration", status=400)
                 
             from backtest_engine.dsl_engine import run_dsl_backtest
+            from validation_engine.validation_pipeline import run_validation
             
             # Start backtest execution
             print(f"[BACKTEST_NODES] Running backtest for {dsl.get('ticker')}...")
@@ -2462,7 +2472,29 @@ def create_app(config_class=Config):
                         print(f"[PHASE 8]       First: {first.get('entry_date')} @ ${float(first.get('entry_price', 0)):.2f} → {first.get('exit_date')} @ ${float(first.get('exit_price', 0)):.2f} ({first.get('pnl_pct', 'N/A')}%)")
                         print(f"[PHASE 8]       Last:  {last.get('entry_date')} @ ${float(last.get('entry_price', 0)):.2f} → {last.get('exit_date')} @ ${float(last.get('exit_price', 0)):.2f} ({last.get('pnl_pct', 'N/A')}%)")
                 
+
+                print(f"\n[PHASE 8B] ============ STEP 8B: QUANTITATIVE VALIDATION ============")
+                
+                def local_backtest_func(strategy_str, d_df):
+                    from backtest_engine.dsl_engine import run_dsl_backtest
+                    # we only override the dates to match d_df
+                    # and pass the rest from backtest_payload as is.
+                    mini_payload = backtest_payload.copy()
+                    if len(d_df) > 0:
+                        mini_payload["start_date"] = str(d_df.index[0].date() if isinstance(d_df.index, pd.DatetimeIndex) else d_df['date'].iloc[0].date() if 'date' in d_df else '2015-01-01')
+                    return run_dsl_backtest(mini_payload, result_id="temp")
+
+                # The validation takes the original df
+                validation_result = run_validation(
+                    strategy=str(strategy_from_debate), 
+                    backtest_result=backtest_result, 
+                    market_data=df.copy(), 
+                    backtest_func=local_backtest_func
+                )
+                print(f"[PHASE 8B] ✓ Validation completed successfully")
+                
                 total_time = (datetime.now(timezone.utc) - execution_start).total_seconds()
+
                 
                 print("\n" + "="*120)
                 print("[PIPELINE_FULL] ════════════════════════════════════════════════════════════════")
@@ -3307,6 +3339,9 @@ def create_app(config_class=Config):
     try:
         from api.routes.backtest_routes import backtest_bp
         app.register_blueprint(backtest_bp)
+        from api.routes.paper_trading_routes import paper_trading_bp
+        app.register_blueprint(paper_trading_bp)
+        logger.info("Registered paper_trading blueprint at /api/paper_trading")
         logger.info("Registered backtest blueprint at /api/backtest")
     except Exception as e:
         logger.warning(f"Could not register backtest blueprint: {e}")
