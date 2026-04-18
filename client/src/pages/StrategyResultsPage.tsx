@@ -7,6 +7,7 @@ import {
   Activity,
   AlertCircle,
   CheckCircle2,
+  Rocket,
   Copy,
   Share2,
   Code,
@@ -76,6 +77,48 @@ interface StrategyResponse {
 export function StrategyResultsPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [deploying, setDeploying] = useState(false);
+
+  const handleDeployToPaperTrading = async () => {
+    setDeploying(true);
+    try {
+      const payload = {
+        strategy_id: strategy?.strategy_id || `strat_${Date.now()}`,
+        strategy_name: strategy?.goal || strategy?.ticker + " Strategy",
+        ticker: strategy?.ticker || "UNKNOWN",
+        initial_capital: 100000,
+        timeframe: strategy?.timeframe || strategy?.parameters?.timeframe || "1d",
+        parameters: strategy?.parameters || {
+          position_size_pct: strategy?.position_size_pct || 10,
+          stop_loss_pct: strategy?.stop_loss_pct || 2,
+          take_profit_pct: strategy?.take_profit_pct || 5
+        },
+        strategy_from_debate: {
+          entry_rules: strategy?.entry_rules || ["Buy when short-term MA crosses above long-term MA", "Confirm with RSI > 50"],
+          exit_rules: strategy?.exit_rules || ["Sell when short-term MA crosses below long-term MA", "Stop Loss hit"]
+        }
+      };
+
+      const response = await fetch("http://localhost:5000/api/paper_trading/deploy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        alert("Strategy deployed to live paper trading successfully!");
+        navigate("/trading", { state: { tab: "deploy" } });
+      } else {
+        alert(`Deploy failed: ${data.error}`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to deploy to Paper Trading Engine.");
+    } finally {
+      setDeploying(false);
+    }
+  };
   const [strategy, setStrategy] = useState<StrategyResponse | null>(null);
   const [selectedTab, setSelectedTab] = useState<"overview" | "rules" | "code">(
     "overview",
@@ -214,6 +257,13 @@ export function StrategyResultsPage() {
                   <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-emerald-400">Ready to Deploy</span>
                 </div>
+                <button 
+                  onClick={handleDeployToPaperTrading}
+                  disabled={deploying}
+                  className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 transition-colors text-sm font-medium border border-emerald-500/30 w-full justify-center"
+                >
+                  <Rocket className="w-4 h-4" /> {deploying ? "Deploying..." : "Deploy to Paper Trading"}
+                </button>
               </div>
             </div>
 

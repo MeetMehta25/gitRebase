@@ -19,22 +19,10 @@ const validationSuites = [
     id: "walk-forward",
     title: "Walk-forward test",
     sub: "Train / test splits",
+    enabled: true
   },
-  { id: "monte-carlo", title: "Monte Carlo", sub: "1000 path simulation" },
-  { id: "kupiec", title: "Kupiec / Christoff.", sub: "VaR model validation" },
-  { id: "regime", title: "Regime segmentation", sub: "Bull/bear/sideways" },
-  {
-    id: "overfitting",
-    title: "Overfitting score",
-    sub: "Rules vs. data length",
-  },
-  {
-    id: "parallel",
-    title: "Parallel universes",
-    sub: "Plausible alt. histories",
-  },
-  { id: "sharpe", title: "Sharpe distribution", sub: "95% confidence band" },
-  { id: "longevity", title: "Longevity forecast", sub: "Edge decay estimate" },
+  { id: "overfitting", title: "Overfitting score", sub: "Rules vs. data length", enabled: true },
+  { id: "monte-carlo", title: "Monte Carlo", sub: "1000 path simulation", enabled: true },
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -479,18 +467,14 @@ export function PlaygroundPage() {
             </div>
 
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                gap: 20,
-              }}
-              className="anim-2"
+              className="anim-2 grid grid-cols-1 md:grid-cols-3 gap-6"
             >
               {validationSuites.map((s) => (
                 <div
                   key={s.id}
-                  className="pg-suite-card"
-                  onClick={() => selectSuite(s)}
+                  className={`pg-suite-card ${!s.enabled ? 'disabled' : ''}`}
+                  onClick={() => s.enabled && selectSuite(s)}
+                  style={!s.enabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                 >
                   <div className="pg-suite-title">{s.title}</div>
                   <div className="pg-suite-sub">{s.sub}</div>

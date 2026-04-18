@@ -18,19 +18,24 @@ const TickerTape = () => {
     script.async = true;
     script.innerHTML = JSON.stringify({
       symbols: [
-        { proName: "NSE:NIFTY", title: "NIFTY 50" },
-        { proName: "NSE:BANKNIFTY", title: "NIFTY BANK" },
+        { proName: "BSE:SENSEX", title: "SENSEX" },
         { proName: "BSE:RELIANCE", title: "Reliance" },
-        { proName: "NSE:TCS", title: "TCS" },
-        { proName: "NSE:INFY", title: "Infosys" },
-        { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-        { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
+        { proName: "BSE:TCS", title: "TCS" },
+        { proName: "BSE:HDFCBANK", title: "HDFC Bank" },
+        { proName: "BSE:ICICIBANK", title: "ICICI Bank" },
+        { proName: "BSE:INFY", title: "Infosys" },
+        { proName: "BSE:SBIN", title: "SBI" },
+        { proName: "BSE:LT", title: "L&T" },
+        { proName: "BSE:ITC", title: "ITC" },
+        { proName: "BSE:BAJFINANCE", title: "Bajaj Finance" },
+        { proName: "BSE:BHARTIARTL", title: "Bharti Airtel" },
+        { proName: "BSE:KOTAKBANK", title: "Kotak Bank" }
       ],
       showSymbolLogo: true,
       isTransparent: true,
       displayMode: "adaptive",
       colorTheme: "dark",
-      locale: "en",
+      locale: "in",
     });
     container.current.appendChild(script);
   }, []);
@@ -94,8 +99,8 @@ const MarketOverview = () => {
     script.innerHTML = JSON.stringify({
       colorTheme: "dark",
       dateRange: "12M",
-      showChart: true,
-      locale: "en",
+      showChart: false,
+      locale: "in",
       width: "100%",
       height: "100%",
       largeChartUrl: "",
@@ -104,26 +109,38 @@ const MarketOverview = () => {
       showFloatingTooltip: false,
       tabs: [
         {
-          title: "Indices",
+          title: "Indian Indices",
           symbols: [
-            { s: "NSE:NIFTY", d: "NIFTY 50" },
-            { s: "NSE:BANKNIFTY", d: "NIFTY BANK" },
-            { s: "BSE:SENSEX", d: "SENSEX" },
-            { s: "NSE:NIFTYIT", d: "NIFTY IT" },
-            { s: "NSE:CNXPHARMA", d: "NIFTY PHARMA" },
+            { s: "BSE:SENSEX", d: "Sensex" },
+            { s: "BSE:BSEBANK", d: "Bankex" },
+            { s: "BSE:BSE_IT", d: "IT Index" },
+            { s: "BSE:BSE-FMCG", d: "FMCG Index" },
+            { s: "BSE:BSE-AUTO", d: "Auto Index" },
           ],
-          originalTitle: "Indices",
+          originalTitle: "Indian Indices",
         },
         {
-          title: "Large Caps",
+          title: "Commodity",
           symbols: [
-            { s: "BSE:RELIANCE", d: "Reliance" },
-            { s: "NSE:TCS", d: "TCS" },
-            { s: "NSE:HDFCBANK", d: "HDFC Bank" },
-            { s: "NSE:ICICIBANK", d: "ICICI Bank" },
-            { s: "NSE:INFY", d: "Infosys" },
+            { s: "OANDA:XCUUSD", d: "COPPER" },
+            { s: "OANDA:WTICOUSD", d: "CRUDE OIL" },
+            { s: "OANDA:XAUUSD", d: "GOLD" },
+            { s: "OANDA:XAGUSD", d: "SILVER" },
+            { s: "OANDA:NATGASUSD", d: "NATURAL GAS" },
           ],
-          originalTitle: "Large Caps",
+          originalTitle: "Commodities",
+        },
+        {
+          title: "Global Indices",
+          symbols: [
+            { s: "OANDA:HK33HKD", d: "Hang Seng" },
+            { s: "OANDA:NAS100USD", d: "NASDAQ 100" },
+            { s: "OANDA:SPX500USD", d: "S&P 500" },
+            { s: "OANDA:JP225USD", d: "Nikkei 225" },
+            { s: "OANDA:UK100GBP", d: "FTSE 100" },
+            { s: "TVC:DXY", d: "U.S. Dollar Index" }
+          ],
+          originalTitle: "Global Indices",
         },
       ],
     });
