@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "../lib/utils";
 import {
   Play,
@@ -18,11 +18,36 @@ const validationSuites = [
   {
     id: "walk-forward",
     title: "Walk-forward test",
-    sub: "Train / test splits",
+    sub: "Train / test splits to ensure robustness across different market conditions.",
+    color: "#a855f7",
+    bg: "rgba(168, 85, 247, 0.05)",
+    border: "rgba(168, 85, 247, 0.4)",
+    shadow: "transparent",
+    icon: Calendar,
     enabled: true
   },
-  { id: "overfitting", title: "Overfitting score", sub: "Rules vs. data length", enabled: true },
-  { id: "monte-carlo", title: "Monte Carlo", sub: "1000 path simulation", enabled: true },
+  { 
+    id: "overfitting", 
+    title: "Overfitting score", 
+    sub: "Analyze rules vs. data length to prevent curve-fitting and false signals.", 
+    color: "#ec4899",
+    bg: "rgba(236, 72, 153, 0.05)",
+    border: "rgba(236, 72, 153, 0.4)",
+    shadow: "transparent",
+    icon: Settings2,
+    enabled: true 
+  },
+  { 
+    id: "monte-carlo", 
+    title: "Monte Carlo", 
+    sub: "1000 path simulation to predict equity curves and drawdowns under uncertainty.", 
+    color: "#3b82f6",
+    bg: "rgba(59, 130, 246, 0.05)",
+    border: "rgba(59, 130, 246, 0.4)",
+    shadow: "transparent",
+    icon: Globe,
+    enabled: true 
+  },
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -207,24 +232,19 @@ input[type=number] { -moz-appearance: textfield; }
 
 /* Suite Cards */
 .pg-suite-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #18181b; /* Closer to the screenshot's dark gray */
+  border: 1px solid #27272a;
   border-radius: 12px;
   padding: 24px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 .pg-suite-card:hover { 
-  border-color: #a855f7; 
-  background: rgba(168, 85, 247, 0.08);
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(168, 85, 247, 0.2);
+  border-color: var(--card-border, #a855f7); 
+  background: #1f1f22;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 .pg-suite-title {
   font-size: 16px;
@@ -352,7 +372,7 @@ export function PlaygroundPage() {
   const [selectedSuite, setSelectedSuite] = useState<any>(null);
   const navigate = useNavigate();
 
-  // Controlled form state
+  // Default form state
   const [strategyDesc, setStrategyDesc] = useState("");
   const [dateFrom, setDateFrom] = useState("2024-01-01");
   const [dateTo, setDateTo] = useState("2025-01-01");
@@ -369,6 +389,48 @@ export function PlaygroundPage() {
     "Market Cap ↓ — Large cap first",
   );
   const [sampleLoaded, setSampleLoaded] = useState(false);
+
+  const [savedStrategies, setSavedStrategies] = useState<any[]>([]);
+  const [selectedSavedStrategy, setSelectedSavedStrategy] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/strategies")
+      .then((res) => res.json())
+      .then((data) => {
+        // Backend returns { success: true, data: { strategies: [...] } }
+        if (data && data.data && data.data.strategies) {
+          setSavedStrategies(data.data.strategies);
+        } else if (data && data.strategies) {
+          setSavedStrategies(data.strategies);
+        } else if (Array.isArray(data)) {
+          setSavedStrategies(data);
+        }
+      })
+      .catch((err) => console.error("Failed to load saved strategies:", err));
+  }, []);
+
+  const loadSavedStrategy = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const strategyId = e.target.value;
+    setSelectedSavedStrategy(strategyId);
+    
+    if (!strategyId) {
+      setStrategyDesc("");
+      return;
+    }
+    
+    const strategy = savedStrategies.find((s) => s.strategy_id === strategyId || s.id === strategyId);
+    if (strategy) {
+      let descText = strategy.goal || strategy.strategy_name || strategy.ticker || strategy.description || "Saved Strategy";
+      if (strategy.entry_rules && strategy.entry_rules.length > 0) {
+        descText += "\nEntry: " + strategy.entry_rules.join(", ");
+      }
+      if (strategy.exit_rules && strategy.exit_rules.length > 0) {
+        descText += "\nExit: " + strategy.exit_rules.join(", ");
+      }
+      setStrategyDesc(descText);
+      if (strategy.timeframe) setTimeframe(strategy.timeframe);
+    }
+  };
 
   const loadSampleStrategy = () => {
     if (!selectedSuite) return;
@@ -467,19 +529,49 @@ export function PlaygroundPage() {
             </div>
 
             <div
-              className="anim-2 grid grid-cols-1 md:grid-cols-3 gap-6"
+              className="anim-2 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto"
+              style={{ marginTop: '3rem', cursor: 'default' }}
             >
-              {validationSuites.map((s) => (
-                <div
-                  key={s.id}
-                  className={`pg-suite-card ${!s.enabled ? 'disabled' : ''}`}
-                  onClick={() => s.enabled && selectSuite(s)}
-                  style={!s.enabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
-                >
-                  <div className="pg-suite-title">{s.title}</div>
-                  <div className="pg-suite-sub">{s.sub}</div>
-                </div>
-              ))}
+              {validationSuites.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <div
+                    key={s.id}
+                    className={`pg-suite-card ${!s.enabled ? 'disabled' : ''}`}
+                    onClick={() => s.enabled && selectSuite(s)}
+                    style={{
+                      ...( !s.enabled ? { opacity: 0.5, cursor: 'not-allowed' } : {} ),
+                      '--card-border': s.border,
+                      '--card-bg': '#1f1f22',
+                    } as React.CSSProperties}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                      <div 
+                        style={{ 
+                          background: s.bg, 
+                          border: `1px solid ${s.border}`,
+                          padding: '12px',
+                          borderRadius: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginTop: '2px', // Align with title text
+                        }}
+                      >
+                        <Icon size={20} style={{ color: s.color }} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div className="pg-suite-title" style={{ fontSize: '16px', fontWeight: 600, color: '#f8fafc', marginBottom: '6px' }}>
+                          {s.title}
+                        </div>
+                        <div className="pg-suite-sub" style={{ fontSize: '13px', color: '#a1a1aa', lineHeight: '1.5' }}>
+                          {s.sub}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -642,6 +734,25 @@ export function PlaygroundPage() {
               title="Strategy Logic"
               sub="Describe your entry & exit conditions in plain language"
             />
+
+            <div className="pg-div" />
+            <div>
+              <Label>Load Saved Strategy (MongoDB)</Label>
+              <select
+                className="pg-field"
+                value={selectedSavedStrategy}
+                onChange={loadSavedStrategy}
+                style={{ width: "100%", marginBottom: 12, height: 38 }}
+              >
+                <option value="">-- Choose a pre-saved strategy --</option>
+                {savedStrategies.map((s, idx) => (
+                  <option key={s.strategy_id || s.id || idx} value={s.strategy_id || s.id}>
+                    {s.goal || s.strategy_name || s.ticker || s.description || `Strategy ${idx + 1}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="pg-div" />
             <div>
               <Label>Entry &amp; exit description</Label>

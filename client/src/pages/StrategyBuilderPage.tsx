@@ -533,21 +533,28 @@ function StrategyFlow() {
     const strategyId = activeStrategyId || 1;
     const q = STRATEGY_QUESTIONS.find((s) => s.id === strategyId);
     
+    // Use generated strategy data if available, fallback to defaults
+    const activeData = generatedStrategy || currentStrategy;
+    const finalTicker = activeData?.ticker || q?.ticker || "RELIANCE.NS";
+    const finalName = activeData?.strategy_name || activeData?.prompt || activeData?.strategy_from_debate?.strategy_name || q?.goal || `Strategy ${strategyId}`;
+    const finalEntry = activeData?.strategy_from_debate?.entry_rules || q?.entry_rules || ["Price crosses VWAP with strong momentum"];
+    const finalExit = activeData?.strategy_from_debate?.exit_rules || q?.exit_rules || ["Price closes below 20-EMA"];
+
     try {
       const payload = {
-        strategy_id: `strat_${strategyId}`,
-        strategy_name: q?.goal || `Strategy ${strategyId}`,
-        ticker: q?.ticker || "RELIANCE.NS",
+        strategy_id: `strat_${strategyId}_${Date.now()}`,
+        strategy_name: finalName,
+        ticker: finalTicker,
         initial_capital: 100000,
-        timeframe: q?.timeframe || "1d",
+        timeframe: activeData?.timeframe || q?.timeframe || "1d",
         parameters: {
           position_size_pct: 10,
           stop_loss_pct: 2.5,
           take_profit_pct: 5
         },
         strategy_from_debate: {
-          entry_rules: q?.entry_rules || ["Price crosses VWAP with strong momentum", "RSI is between 40 and 60"],
-          exit_rules: q?.exit_rules || ["Price closes below 20-EMA", "Take profit target reached"]
+          entry_rules: finalEntry,
+          exit_rules: finalExit
         }
       };
 
@@ -555,6 +562,24 @@ function StrategyFlow() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+      });
+
+      // Also SAVE to strategies collection so it appears in Playground!
+      const savePayload = {
+        strategyId: payload.strategy_id,
+        ticker: finalTicker,
+        timeframe: payload.timeframe,
+        goal: finalName,
+        nodes: nodes,
+        edges: edges,
+        entryRules: finalEntry,
+        exitRules: finalExit
+      };
+
+      await fetch("http://localhost:5000/api/strategies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(savePayload),
       });
       
       const data = await response.json();

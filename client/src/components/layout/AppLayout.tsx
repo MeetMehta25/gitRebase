@@ -16,7 +16,7 @@ function ProfileSetupModal({ updateProfile }: { updateProfile: any }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="bg-[#141415] border border-white/10 rounded-xl p-8 max-w-md w-full shadow-2xl">
         <h2 className="text-2xl font-bold text-white mb-2">
-          Welcome to Alpha Quant
+          Welcome to QuantSphere
         </h2>
         <p className="text-sm text-gray-400 mb-6">
           Let's set up your profile to tailor the experience.
@@ -107,7 +107,7 @@ export function AppLayout() {
   const isActivePathRestricted = () => {
     if (!profile.level) return false; // Allow until profile setup
     if (profile.level === "Beginner") {
-      return ["/sandbox", "/playground", "/strategy-builder"].includes(
+      return ["/sandbox", "/playground"].includes(
         location.pathname,
       );
     }
@@ -194,7 +194,7 @@ export function AppLayout() {
             />
             {!isCollapsed && (
               <span className="ml-3 font-mono font-bold text-sm tracking-tight text-white whitespace-nowrap">
-                Alpha Quant
+                QuantSphere
               </span>
             )}
           </div>
@@ -227,7 +227,6 @@ export function AppLayout() {
                 return ![
                   "/sandbox",
                   "/playground",
-                  "/strategy-builder",
                 ].includes(item.path);
               }
               if (profile.level === "Intermediate") {

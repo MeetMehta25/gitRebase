@@ -15,7 +15,7 @@ from config.database import init_db, get_db
 from utils.serializer import serialize_doc, serialize_docs
 from agents import get_all_trading_agents, get_consensus_agent
 import yfinance as yf
-from rss_feed import get_indian_news
+from rss_feed import get_news_for_symbol
 import pandas as pd
 from datetime import datetime, timezone
 import uuid
@@ -374,35 +374,53 @@ def _normalize_news_item(item, fallback_id: int):
     }
 
 
-def _fetch_news_for_symbol(symbol: str, limit: int = 12):
+import time
+
+# Cache dictionary to prevent rate limits
+_NEWS_CACHE = {}
+_NEWS_CACHE_TTL = 300 # 5 minutes
+
+def _fetch_news_for_symbol(symbol: str, limit: int = 12, force: bool = False):
+    now = time.time()
+    
+    # Check cache
+    if not force and symbol in _NEWS_CACHE:
+        cached_time, cached_data = _NEWS_CACHE[symbol]
+        if now - cached_time < _NEWS_CACHE_TTL:
+            return cached_data
+
     formatted = []
     
-    # Intercept Indian indices/tickers
-    if symbol.startswith('^BSESN') or symbol.startswith('^NSEI') or symbol.endswith('.NS') or symbol.endswith('.BO'):
+    # Prioritize specific Google News RSS for Indian / general stocks
+    try:
+        formatted = get_news_for_symbol(symbol)
+    except Exception as e:
+        logger.warning(f"Google News RSS failed for {symbol}: {e}")
+        pass
+
+    # If nothing or less than 3 articles, fallback to standard yahoo finance fetch logic
+    if len(formatted) < 3:
         try:
-            return get_indian_news()
-        except:
+            ticker = yf.Ticker(symbol)
+            raw_news = ticker.news if hasattr(ticker, "news") else []
+            if isinstance(raw_news, list):
+                for idx, item in enumerate(raw_news[:30]):
+                    normalized = _normalize_news_item(item, idx)
+                    if not normalized or not normalized["link"]:
+                        continue
+                    # Avoid duplicates
+                    if any(x["title"] == normalized["title"] for x in formatted):
+                        continue
+                    formatted.append(normalized)
+                    if len(formatted) >= limit:
+                        break
+        except Exception as e:
+            logger.warning(f"YFinance news fallback failed for {symbol}: {e}")
             pass
-
-    # Fallback to standard yahoo finance fetch logic
-    ticker = yf.Ticker(symbol)
-    raw_news = ticker.news if hasattr(ticker, "news") else []
-
-    if not isinstance(raw_news, list):
-        return formatted
-
-    for idx, item in enumerate(raw_news[:30]):
-        normalized = _normalize_news_item(item, idx)
-        if not normalized:
-            continue
-        if not normalized["link"]:
-            continue
-
-        formatted.append(normalized)
-        if len(formatted) >= limit:
-            break
-
-    return formatted
+            
+    # Save to cache
+    _NEWS_CACHE[symbol] = (now, formatted[:limit])
+    return formatted[:limit]
     
     
 
@@ -1605,6 +1623,7 @@ def create_app(config_class=Config):
     
     @app.route("/api/news/<symbol>", methods=["GET"])
     def get_news(symbol):
+        force_refresh = request.args.get("force", "false").lower() == "true"
         try:
             requested_symbol = symbol.strip()
             candidate_symbols = [requested_symbol]
@@ -1615,7 +1634,7 @@ def create_app(config_class=Config):
 
             for candidate in candidate_symbols:
                 try:
-                    candidate_news = _fetch_news_for_symbol(candidate, limit=10)
+                    candidate_news = _fetch_news_for_symbol(candidate, limit=10, force=force_refresh)
                 except Exception as e:
                     logger.warning(f"[News] Failed for symbol {candidate}: {e}")
                     continue
@@ -1957,22 +1976,7 @@ def create_app(config_class=Config):
             if not prompt:
                 return _resp(error="'prompt' field is required", status=400)
                 
-            from langchain_groq import ChatGroq
-            from langchain_core.messages import HumanMessage, SystemMessage
-            from utils.key_rotator import groq_api_rotator
-            
-            validator = ChatGroq(
-                model="llama-3.1-8b-instant",
-                temperature=0.0,
-                api_key=groq_api_rotator.get_next_key()
-            )
-            val_res = validator.invoke([
-                SystemMessage(content="You are a strict classifier. Return ONLY 'YES' if the user prompt describes a valid trading strategy, market scenario, or stock request. Return ONLY 'NO' if it is conversational, random gibberish, or unrelated to financial trading (e.g. 'hello xyz ajsdc')."),
-                HumanMessage(content=prompt)
-            ])
-            if "NO" in val_res.content.upper():
-                return _resp(error="Please provide a valid trading strategy request.", status=400)
-                
+            # Bypass strict LLM validation to ensure legitimate strategies always pass
             return _resp({"valid": True}, status=200)
         except Exception as e:
             return _resp(error=str(e), status=500)

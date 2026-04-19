@@ -12,10 +12,10 @@ export function Navbar() {
 
         {/* Logo */}
         <div className="flex items-center gap-8">
-          <img src={logo} alt="Alpha Quant Logo" className="w-8 h-8 object-contain" />
+          <img src={logo} alt="QuantSphere Logo" className="w-8 h-8 object-contain" />
 
           <span className="font-mono font-semibold text-sm tracking-tight text-white whitespace-nowrap -ml-6">
-            Alpha Quant
+            QuantSphere
           </span>
         </div>
 

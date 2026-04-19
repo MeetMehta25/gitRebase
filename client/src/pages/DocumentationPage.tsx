@@ -83,7 +83,7 @@ export function DocumentationPage() {
         <div className="mb-8 text-center md:text-left">
           <h1 className="text-3xl font-bold text-white mb-3">Documentation Repository</h1>
           <p className="text-gray-400 max-w-2xl text-lg">
-            Master the core concepts of systematic trading, understand risk management, and learn how to leverage Alpha Quant's intelligent agent swarm.
+            Master the core concepts of systematic trading, understand risk management, and learn how to leverage QuantSphere's intelligent agent swarm.
           </p>
         </div>
 
@@ -200,7 +200,7 @@ export function DocumentationPage() {
                 </div>
               </div>
               <p className="text-gray-400 mb-6">
-                Alpha Quant doesn't rely on a single algorithm. We utilize a swarm consensus model. 
+                QuantSphere doesn't rely on a single algorithm. We utilize a swarm consensus model. 
                 Each agent has a specific personality and expertise, looking at the same stock from completely different angles before they vote on the final strategy.
               </p>
               

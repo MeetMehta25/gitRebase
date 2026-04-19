@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -19,7 +20,7 @@ import {
   Legend,
 } from "recharts";
 import { TrendingUp } from "lucide-react";
-import { KPI_DATA } from "../../data/backtestRunData";
+import { KPI_DATA, regenerateBacktestData } from "../../data/backtestRunData";
 import * as D from "../../data/backtestRunData";
 
 const chartTooltipStyle = {
@@ -41,7 +42,7 @@ function KPICards() {
     { label: "Profit Factor", value: KPI_DATA.profitFactor, color: "#14b8a6" },
   ];
   return (
-    <div className="grid grid-cols-5 gap-2 mb-3">
+    <div className="grid grid-cols-5 gap-4 mb-6">
       {kpis.map((kpi, i) => (
         <motion.div
           key={kpi.label}
@@ -69,17 +70,21 @@ function ChartCard({
   title,
   children,
   delay = 0,
+  className = "",
+  height = 220,
 }: {
   title: string;
   children: React.ReactNode;
   delay?: number;
+  className?: string;
+  height?: number;
 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="rounded-lg border border-white/6 bg-white/2 overflow-hidden"
+      className={`rounded-lg border border-white/6 bg-white/2 overflow-hidden ${className}`}
     >
       <div className="px-3 py-2 border-b border-white/6 flex items-center gap-2">
         <TrendingUp className="w-3 h-3 text-emerald-400" />
@@ -87,7 +92,7 @@ function ChartCard({
           {title}
         </span>
       </div>
-      <div className="p-2" style={{ height: 220 }}>
+      <div className="p-4" style={{ height }}>
         {children}
       </div>
     </motion.div>
@@ -96,7 +101,7 @@ function ChartCard({
 
 function WalkForwardCharts() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <ChartCard title="Train vs Test Equity" delay={0.3}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={D.walkForwardEquity}>
@@ -180,7 +185,7 @@ function WalkForwardCharts() {
 
 function MonteCarloCharts() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <ChartCard title="Final Equity Distribution" delay={0.3}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={D.monteCarloHistogram}>
@@ -192,9 +197,19 @@ function MonteCarloCharts() {
               dataKey="bin"
               tick={{ fill: "#6b7280", fontSize: 9 }}
               interval={4}
+              height={30}
+              label={{ value: "Portfolio Value ($)", position: "insideBottom", fill: "#9ca3af", fontSize: 11 }}
             />
-            <YAxis hide />
-            <Tooltip {...chartTooltipStyle} />
+            <YAxis 
+              tick={{ fill: "#6b7280", fontSize: 10 }}
+              width={40}
+              label={{ value: "Paths Count", angle: -90, position: "insideLeft", fill: "#9ca3af", fontSize: 11 }}
+            />
+            <Tooltip 
+              {...chartTooltipStyle} 
+              formatter={(value: number) => [value, "Paths Count"]}
+              labelFormatter={(label) => `Final Equity: $${label}`}
+            />
             <Bar
               dataKey="freq"
               fill="#3b82f6"
@@ -215,9 +230,19 @@ function MonteCarloCharts() {
               dataKey="bin"
               tick={{ fill: "#6b7280", fontSize: 9 }}
               interval={3}
+              height={30}
+              label={{ value: "Sharpe Ratio", position: "insideBottom", fill: "#9ca3af", fontSize: 11 }}
             />
-            <YAxis hide />
-            <Tooltip {...chartTooltipStyle} />
+            <YAxis 
+              tick={{ fill: "#6b7280", fontSize: 10 }}
+              width={40}
+              label={{ value: "Paths Count", angle: -90, position: "insideLeft", fill: "#9ca3af", fontSize: 11 }}
+            />
+            <Tooltip 
+              {...chartTooltipStyle} 
+              formatter={(value: number) => [value, "Paths Count"]}
+              labelFormatter={(label) => `Sharpe Ratio Range: ${label}`}
+            />
             <Bar
               dataKey="freq"
               fill="#a78bfa"
@@ -227,16 +252,33 @@ function MonteCarloCharts() {
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
-      <ChartCard title="Simulated Equity Paths" delay={0.5}>
+      <ChartCard title="Simulated Equity Paths" delay={0.5} className="md:col-span-2" height={280}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke="rgba(255,255,255,0.04)"
             />
-            <XAxis dataKey="day" type="number" domain={[0, 49]} hide />
-            <YAxis hide domain={["auto", "auto"]} />
-            <Tooltip {...chartTooltipStyle} />
+            <XAxis 
+              dataKey="day" 
+              type="number" 
+              domain={[0, 49]} 
+              tick={{ fill: "#6b7280", fontSize: 10 }}
+              height={30}
+              label={{ value: "Trading Days Simulated", position: "insideBottom", fill: "#9ca3af", fontSize: 12 }} 
+            />
+            <YAxis 
+              domain={["auto", "auto"]} 
+              tick={{ fill: "#6b7280", fontSize: 10 }}
+              tickFormatter={(v) => `$${v.toLocaleString()}`}
+              width={80}
+              label={{ value: "Portfolio Value ($)", angle: -90, position: "insideLeft", fill: "#9ca3af", fontSize: 12 }}
+            />
+            <Tooltip 
+              {...chartTooltipStyle} 
+              formatter={(value: number) => [`$${value.toLocaleString()}`, "Equity"]}
+              labelFormatter={(label) => `Day ${label}`}
+            />
             {D.mcPaths.map((path, i) => (
               <Line
                 key={i}
@@ -258,7 +300,7 @@ function MonteCarloCharts() {
 
 function KupiecCharts() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <ChartCard title="VaR Exceedance Plot" delay={0.3}>
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart>
@@ -358,7 +400,7 @@ function KupiecCharts() {
 
 function RegimeCharts() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <ChartCard title="Equity Curve by Regime" delay={0.3}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={D.regimeEquity}>
@@ -431,7 +473,7 @@ function RegimeCharts() {
 
 function OverfittingCharts() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <ChartCard title="Parameter Heatmap (Sharpe)" delay={0.3}>
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart>
@@ -537,7 +579,7 @@ function ParallelCharts() {
 
 function SharpeCharts() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <ChartCard title="Sharpe Ratio Histogram" delay={0.3}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={D.sharpeHistogramData}>
@@ -605,7 +647,7 @@ function SharpeCharts() {
 
 function LongevityCharts() {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <ChartCard title="Alpha Decay Curve" delay={0.3}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={D.alphaDecay}>
@@ -689,13 +731,20 @@ const SUITE_CHARTS: Record<string, () => JSX.Element> = {
 };
 
 export function ChartsPanel({ suiteId }: { suiteId: string }) {
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    regenerateBacktestData();
+    setTick(t => t + 1); // trigger re-render with fresh dynamic stats
+  }, [suiteId]);
+
   const Charts = SUITE_CHARTS[suiteId] || WalkForwardCharts;
   return (
     <div
       className="h-full flex flex-col bg-[#0c0d10] overflow-y-auto"
       style={{ scrollbarWidth: "none" }}
     >
-      <div className="p-3">
+      <div className="p-6">
         <KPICards />
         <Charts />
       </div>

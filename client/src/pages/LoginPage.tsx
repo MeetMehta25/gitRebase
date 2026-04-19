@@ -51,8 +51,8 @@ export function LoginPage() {
           {/* Logo/Header */}
           <div className="mb-12 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <img src={logo} alt="Alpha Quant Logo" className="w-12 h-12 object-contain" />
-              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-blue-400 tracking-tight">Alpha Quant</h1>
+              <img src={logo} alt="QuantSphere Logo" className="w-12 h-12 object-contain" />
+              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-blue-400 tracking-tight">QuantSphere</h1>
             </div>
             <p className="text-white/50 text-sm">
               {isSignUp ? "Create your trading intelligence account" : "Welcome back to your trading hub"}

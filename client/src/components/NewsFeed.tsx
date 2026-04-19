@@ -111,9 +111,11 @@ export function NewsFeed({ market }: NewsFeedProps) {
     }
 
     fetchNews();
+    // Reduced polling frequency from 45s to 5 minutes to avoid API rate limits 
+    // and since news doesn't update every 45 secs anyway
     const intervalId = window.setInterval(() => {
       fetchNews(true);
-    }, 45000);
+    }, 300000);
 
     return () => {
       isMounted = false;

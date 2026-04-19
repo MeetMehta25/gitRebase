@@ -231,6 +231,46 @@ const MOCK_SCREENER_DATA = [
 
 export function StockScreenerPage() {
   const [activeSymbol, setActiveSymbol] = useState("BSE:RELIANCE");
+  const [screenerData, setScreenerData] = useState(MOCK_SCREENER_DATA);
+
+  useEffect(() => {
+    async function fetchLiveQuotes() {
+      try {
+        const tickers = MOCK_SCREENER_DATA.map((row) => `${row.ticker}.NS`);
+        const res = await fetch("/api/data/quotes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tickers }),
+        });
+        const data = await res.json();
+
+        if (data.data) {
+          const updated = [...MOCK_SCREENER_DATA];
+          for (const key in data.data) {
+            const rawTicker = key.replace(".NS", "").replace(".BO", "");
+            const idx = updated.findIndex((r) => r.ticker === rawTicker);
+            if (idx !== -1) {
+              const livePrice = data.data[key].price;
+              const liveChange = data.data[key].change;
+              updated[idx].price = `INR ${livePrice.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`;
+              const sign = liveChange >= 0 ? "+" : "";
+              updated[idx].change = `${sign}${liveChange.toFixed(2)}%`;
+            }
+          }
+          setScreenerData(updated);
+        }
+      } catch (e) {
+        console.error("Failed to load live quotes for screener:", e);
+      }
+    }
+
+    fetchLiveQuotes();
+    const interval = setInterval(fetchLiveQuotes, 60000); // refresh every minute
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <motion.div
@@ -307,7 +347,7 @@ export function StockScreenerPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {MOCK_SCREENER_DATA.map((row) => {
+                  {screenerData.map((row) => {
                     const isPositive = row.change.startsWith("+");
                     const rsi = parseFloat(row.rsi);
                     const rsiColor =

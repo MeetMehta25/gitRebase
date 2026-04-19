@@ -15,7 +15,7 @@ export function DynamicsSection() {
           The Dynamics
         </h2>
         <h2 className="text-4xl md:text-5xl lg:text-[64px] font-serif italic text-white/90 font-light leading-tight">
-          of Alpha Quant
+          of QuantSphere
         </h2>
       </div>
 
@@ -128,9 +128,9 @@ export function DynamicsSection() {
 
         {/* Bottom Text */}
         <div className="relative z-10 max-w-2xl mx-auto text-center">
-          <h3 className="text-white font-medium text-lg leading-relaxed mb-3">The realm of Alpha Quant</h3>
+          <h3 className="text-white font-medium text-lg leading-relaxed mb-3">The realm of QuantSphere</h3>
           <p className="text-[#71717a] text-sm md:text-base leading-relaxed font-light">
-            The realm of Alpha Quant, providing strategic insights and practical<br className="hidden md:block"/> wisdom to steer your trading towards sustainable expansion.
+            The realm of QuantSphere, providing strategic insights and practical<br className="hidden md:block"/> wisdom to steer your trading towards sustainable expansion.
           </p>
         </div>
       </div>

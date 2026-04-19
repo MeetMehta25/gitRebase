@@ -85,7 +85,7 @@ export function ConnectBrokerPage() {
         <div className="flex-1 w-full lg:w-2/3">
           <h1 className="text-2xl font-bold text-white mb-2">Add Your Broker</h1>
           <p className="text-gray-400 mb-1 font-medium">
-            Browse the partner list and pick the broker you want to connect with Alpha Quant.
+            Browse the partner list and pick the broker you want to connect with QuantSphere.
           </p>
           <p className="text-gray-500 text-sm mb-6">
             Broker logo rights are completely of broker itself. We do not claim any right on broker logo.
